@@ -14,6 +14,9 @@ import { NewPatient } from "./pages/NewPatient";
 import { PatientRecords } from "./pages/PatientRecords";
 import { SearchPage } from "./pages/Search";
 import { Assistant } from "./pages/Assistant";
+import { Notifications } from "./pages/Notifications";
+import { Profile } from "./pages/Profile";
+import { Settings } from "./pages/Settings";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -48,6 +51,9 @@ const App = () => (
               <Route path="/patient-records" element={<PatientRecords />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/assistant" element={<Assistant />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

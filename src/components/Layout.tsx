@@ -1,5 +1,6 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Breadcrumb } from './Breadcrumb';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
@@ -7,7 +8,13 @@ import {
   LogOut, 
   User, 
   Settings,
-  Bell
+  Bell,
+  Home,
+  Camera,
+  Search,
+  FileText,
+  MessageSquare,
+  Users
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -20,6 +27,7 @@ import { Badge } from '@/components/ui/badge';
 export const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -35,6 +43,16 @@ export const Layout = () => {
     }
   };
 
+  const navItems = [
+    { name: 'Dashboard', path: '/dashboard', icon: Home },
+    { name: 'Scan ID', path: '/scan', icon: Camera },
+    { name: 'Search', path: '/search', icon: Search },
+    { name: 'Records', path: '/patient-records', icon: FileText },
+    { name: 'Assistant', path: '/assistant', icon: MessageSquare },
+  ];
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -42,7 +60,10 @@ export const Layout = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <div 
+              className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => navigate('/dashboard')}
+            >
               <div className="bg-primary p-2 rounded-lg">
                 <Stethoscope className="h-6 w-6 text-primary-foreground" />
               </div>
@@ -54,7 +75,12 @@ export const Layout = () => {
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="relative">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="relative hover:bg-accent"
+                onClick={() => navigate('/notifications')}
+              >
                 <Bell className="h-4 w-4" />
                 <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   2
@@ -97,8 +123,36 @@ export const Layout = () => {
         </div>
       </header>
 
+      {/* Navigation Bar */}
+      <nav className="bg-card border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-1 py-3">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Button
+                  key={item.path}
+                  variant={isActive(item.path) ? "default" : "ghost"}
+                  size="sm"
+                  className={`flex items-center space-x-2 ${
+                    isActive(item.path) 
+                      ? "bg-primary text-primary-foreground" 
+                      : "hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                  onClick={() => navigate(item.path)}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{item.name}</span>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      </nav>
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb />
         <Outlet />
       </main>
     </div>

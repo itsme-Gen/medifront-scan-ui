@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,11 +18,14 @@ import {
   Clock,
   Edit,
   Plus,
-  Download
+  Download,
+  ArrowLeft,
+  Share
 } from 'lucide-react';
 
 export const PatientRecords = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { patient } = location.state || {};
 
   // Mock medical history data
@@ -113,6 +116,32 @@ export const PatientRecords = () => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      {/* Interactive Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="hover:bg-accent"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <h1 className="text-2xl font-bold">Patient Records</h1>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" size="sm">
+            <Share className="h-4 w-4 mr-2" />
+            Share Records
+          </Button>
+          <Button size="sm" onClick={() => navigate('/new-patient')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Patient
+          </Button>
+        </div>
+      </div>
+
       {/* Patient Header */}
       <Card>
         <CardContent className="p-6">
