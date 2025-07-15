@@ -24,10 +24,10 @@ export const Dashboard = () => {
   const { user } = useAuth();
 
   const stats = [
-    { title: 'Patients Scanned Today', value: '127', icon: Users, trend: '+12%' },
-    { title: 'Records Verified', value: '98', icon: CheckCircle, trend: '+8%' },
-    { title: 'New Registrations', value: '15', icon: UserPlus, trend: '+25%' },
-    { title: 'Pending Reviews', value: '8', icon: Clock, trend: '-3%' },
+    { title: 'Patients Scanned Today', value: '127', icon: Users, trend: '+12%', action: () => navigate('/search?filter=today') },
+    { title: 'Records Verified', value: '98', icon: CheckCircle, trend: '+8%', action: () => navigate('/patient-records?status=verified') },
+    { title: 'New Registrations', value: '15', icon: UserPlus, trend: '+25%', action: () => navigate('/patient-records?filter=new') },
+    { title: 'Pending Reviews', value: '8', icon: Clock, trend: '-3%', action: () => navigate('/patient-records?status=pending') },
   ];
 
   const quickActions = [
@@ -101,7 +101,11 @@ export const Dashboard = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <Card key={stat.title}>
+          <Card 
+            key={stat.title} 
+            className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200"
+            onClick={stat.action}
+          >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
