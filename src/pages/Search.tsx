@@ -109,6 +109,14 @@ export const SearchPage = () => {
         <p className="text-muted-foreground">
           Use natural language to search through patient records and medical data
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/dashboard')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to Dashboard
+        </Button>
       </div>
 
       {/* Search Interface */}
@@ -162,7 +170,37 @@ export const SearchPage = () => {
         </CardContent>
       </Card>
 
-      {/* Search Results */}
+      {/* Search Results or Empty State */}
+      {searchQuery && searchResults.length === 0 && !isLoading && (
+        <Card className="border-dashed">
+          <CardContent className="p-12 text-center">
+            <div className="bg-muted p-6 rounded-full inline-block mb-4">
+              <Search className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">No Results Found</h3>
+            <p className="text-muted-foreground mb-4">
+              No patients or records match your search for "{searchQuery}"
+            </p>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Try searching for:</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {sampleQueries.slice(0, 3).map((query, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSampleQuery(query)}
+                    className="text-xs"
+                  >
+                    {query}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {searchResults.length > 0 && (
         <Card>
           <CardHeader>
@@ -181,7 +219,7 @@ export const SearchPage = () => {
                 return (
                   <div 
                     key={result.id}
-                    className="border rounded-lg p-4 hover:bg-accent/50 cursor-pointer transition-colors"
+                    className="border rounded-lg p-4 hover:bg-accent/50 hover:shadow-md cursor-pointer transition-all duration-200"
                     onClick={() => {
                       if (result.type === 'patient') {
                         navigate('/patient-records', { 
@@ -231,39 +269,56 @@ export const SearchPage = () => {
         </Card>
       )}
 
-      {/* Search Analytics */}
+      {/* Interactive Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200"
+          onClick={() => navigate('/patient-records')}
+        >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Patients</p>
                 <p className="text-2xl font-bold">1,247</p>
+                <p className="text-xs text-success flex items-center mt-1">
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  +24 this week
+                </p>
               </div>
               <Users className="h-8 w-8 text-primary" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200"
+          onClick={() => navigate('/patient-records?view=records')}
+        >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Medical Records</p>
                 <p className="text-2xl font-bold">5,890</p>
+                <p className="text-xs text-success flex items-center mt-1">
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  +156 new records
+                </p>
               </div>
               <FileText className="h-8 w-8 text-success" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200"
+          onClick={() => navigate('/patient-records?filter=recent')}
+        >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Recent Visits</p>
                 <p className="text-2xl font-bold">156</p>
-                <p className="text-xs text-success flex items-center">
+                <p className="text-xs text-success flex items-center mt-1">
                   <TrendingUp className="h-3 w-3 mr-1" />
                   +12% this month
                 </p>
@@ -274,7 +329,7 @@ export const SearchPage = () => {
         </Card>
       </div>
 
-      {/* Quick Filters */}
+      {/* Enhanced Quick Filters */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -289,36 +344,99 @@ export const SearchPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Button 
               variant="outline" 
-              className="h-20 flex-col"
-              onClick={() => handleSampleQuery("patients with diabetes")}
+              className="h-20 flex-col hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-105"
+              onClick={() => {
+                handleSampleQuery("patients with diabetes");
+                setSearchQuery("patients with diabetes");
+              }}
             >
               <Users className="h-6 w-6 mb-2" />
               <span className="text-sm">Diabetic Patients</span>
+              <span className="text-xs text-muted-foreground mt-1">247 patients</span>
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex-col"
-              onClick={() => handleSampleQuery("emergency visits")}
+              className="h-20 flex-col hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-105"
+              onClick={() => {
+                handleSampleQuery("emergency visits");
+                setSearchQuery("emergency visits");
+              }}
             >
               <Clock className="h-6 w-6 mb-2" />
               <span className="text-sm">Emergency Visits</span>
+              <span className="text-xs text-muted-foreground mt-1">89 this month</span>
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex-col"
-              onClick={() => handleSampleQuery("patients with allergies")}
+              className="h-20 flex-col hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-105"
+              onClick={() => {
+                handleSampleQuery("patients with allergies");
+                setSearchQuery("patients with allergies");
+              }}
             >
               <AlertTriangle className="h-6 w-6 mb-2" />
               <span className="text-sm">Allergy Alerts</span>
+              <span className="text-xs text-muted-foreground mt-1">156 patients</span>
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex-col"
-              onClick={() => handleSampleQuery("recent lab results")}
+              className="h-20 flex-col hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-105"
+              onClick={() => {
+                handleSampleQuery("recent lab results");
+                setSearchQuery("recent lab results");
+              }}
             >
               <FileText className="h-6 w-6 mb-2" />
               <span className="text-sm">Lab Results</span>
+              <span className="text-xs text-muted-foreground mt-1">342 pending</span>
             </Button>
+          </div>
+          
+          {/* Additional Quick Actions */}
+          <div className="mt-6 pt-4 border-t">
+            <h4 className="font-medium mb-3">Advanced Filters</h4>
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  handleSampleQuery("patients over 65");
+                  setSearchQuery("patients over 65");
+                }}
+              >
+                Senior Patients (65+)
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  handleSampleQuery("patients with chronic conditions");
+                  setSearchQuery("patients with chronic conditions");
+                }}
+              >
+                Chronic Conditions
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  handleSampleQuery("upcoming appointments");
+                  setSearchQuery("upcoming appointments");
+                }}
+              >
+                Upcoming Appointments
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  handleSampleQuery("overdue checkups");
+                  setSearchQuery("overdue checkups");
+                }}
+              >
+                Overdue Checkups
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
