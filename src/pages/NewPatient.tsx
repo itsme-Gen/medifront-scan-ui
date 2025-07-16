@@ -384,6 +384,14 @@ export const NewPatient = () => {
         <p className="text-muted-foreground">
           Complete the registration form to add a new patient to the system
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/verification-results')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to Verification
+        </Button>
       </div>
 
       {/* Progress */}

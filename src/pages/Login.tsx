@@ -57,10 +57,18 @@ export const Login = () => {
       <div className="w-full max-w-md space-y-6">
         {/* Logo */}
         <div className="text-center">
-          <div className="bg-primary p-4 rounded-2xl inline-block mb-4">
+          <div 
+            className="bg-primary p-4 rounded-2xl inline-block mb-4 cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigate('/dashboard')}
+          >
             <Stethoscope className="h-12 w-12 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">MediScan</h1>
+          <h1 
+            className="text-3xl font-bold text-foreground cursor-pointer hover:text-primary transition-colors"
+            onClick={() => navigate('/dashboard')}
+          >
+            MediScan
+          </h1>
           <p className="text-muted-foreground">Medical Record Verification System</p>
         </div>
 

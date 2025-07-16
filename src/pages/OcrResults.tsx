@@ -92,6 +92,14 @@ export const OcrResults = () => {
         <p className="text-muted-foreground">
           Review and edit the extracted information before proceeding
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/scan')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to Scan
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -74,6 +74,14 @@ export const VerificationResults = () => {
         <p className="text-muted-foreground">
           Patient record search completed
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/ocr-results')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to OCR Results
+        </Button>
       </div>
 
       {/* Match Status */}

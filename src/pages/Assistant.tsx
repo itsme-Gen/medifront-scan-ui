@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ interface Message {
 }
 
 export const Assistant = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -122,6 +124,14 @@ export const Assistant = () => {
         <p className="text-muted-foreground">
           Chat with our AI assistant for medical record queries and administrative help
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/dashboard')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to Dashboard
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

@@ -102,6 +102,14 @@ export const ScanId = () => {
         <p className="text-muted-foreground">
           Capture or upload a patient identification document for verification
         </p>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/dashboard')}
+          className="mt-2 text-primary hover:text-primary-foreground hover:bg-primary"
+        >
+          ← Back to Dashboard
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
