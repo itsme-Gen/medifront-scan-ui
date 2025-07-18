@@ -10,6 +10,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { ScanId } from "./pages/ScanId";
 import { OcrResults } from "./pages/OcrResults";
 import { VerificationResults } from "./pages/VerificationResults";
+import { MedicalInformation } from "./pages/MedicalInformation";
 import { NewPatient } from "./pages/NewPatient";
 import { PatientRecords } from "./pages/PatientRecords";
 import { SearchPage } from "./pages/Search";
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/upload" element={<ScanId />} />
               <Route path="/ocr-results" element={<OcrResults />} />
               <Route path="/verification-results" element={<VerificationResults />} />
+              <Route path="/medical-information" element={<MedicalInformation />} />
               <Route path="/new-patient" element={<NewPatient />} />
               <Route path="/patient-records" element={<PatientRecords />} />
               <Route path="/search" element={<SearchPage />} />

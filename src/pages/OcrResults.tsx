@@ -52,6 +52,15 @@ export const OcrResults = () => {
     });
   };
 
+  const handleNext = () => {
+    // Navigate to medical information form
+    navigate('/medical-information', { 
+      state: { 
+        patientData: formData
+      }
+    });
+  };
+
   const handleRetry = () => {
     navigate('/scan');
   };
@@ -225,6 +234,15 @@ export const OcrResults = () => {
             >
               <Search className="h-4 w-4" />
               <span>Search Records</span>
+            </Button>
+
+            <Button
+              onClick={handleNext}
+              variant="default"
+              className="flex items-center space-x-2"
+              disabled={!formData.fullName || !formData.idNumber || !formData.birthDate}
+            >
+              <span>Next</span>
             </Button>
           </div>
           
