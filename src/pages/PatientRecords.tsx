@@ -20,7 +20,16 @@ import {
   Plus,
   Download,
   ArrowLeft,
-  Share
+  Share,
+  TrendingUp,
+  TrendingDown,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  Eye,
+  MoreHorizontal,
+  Filter,
+  Search
 } from 'lucide-react';
 
 export const PatientRecords = () => {
@@ -75,10 +84,12 @@ export const PatientRecords = () => {
       bmi: '27.5'
     },
     labResults: [
-      { test: 'HbA1c', value: '7.2%', date: '2024-01-10', status: 'elevated' },
-      { test: 'Cholesterol Total', value: '190 mg/dL', date: '2024-01-10', status: 'normal' },
-      { test: 'Blood Glucose', value: '145 mg/dL', date: '2024-01-10', status: 'elevated' },
-      { test: 'Creatinine', value: '1.1 mg/dL', date: '2024-01-10', status: 'normal' }
+      { test: 'HbA1c', value: '7.2%', date: '2024-01-10', status: 'elevated', trend: 'up', priority: 'high' },
+      { test: 'Cholesterol Total', value: '190 mg/dL', date: '2024-01-10', status: 'normal', trend: 'stable', priority: 'low' },
+      { test: 'Blood Glucose', value: '145 mg/dL', date: '2024-01-10', status: 'elevated', trend: 'up', priority: 'medium' },
+      { test: 'Creatinine', value: '1.1 mg/dL', date: '2024-01-10', status: 'normal', trend: 'down', priority: 'low' },
+      { test: 'White Blood Cell Count', value: '8.5 K/uL', date: '2024-01-10', status: 'normal', trend: 'stable', priority: 'low' },
+      { test: 'Hemoglobin', value: '13.2 g/dL', date: '2024-01-10', status: 'normal', trend: 'stable', priority: 'low' }
     ]
   };
 
@@ -97,6 +108,33 @@ export const PatientRecords = () => {
       case 'elevated': return 'secondary';
       case 'critical': return 'destructive';
       default: return 'outline';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'normal': return <CheckCircle className="h-4 w-4 text-success" />;
+      case 'elevated': return <AlertCircle className="h-4 w-4 text-warning" />;
+      case 'critical': return <XCircle className="h-4 w-4 text-destructive" />;
+      default: return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up': return <TrendingUp className="h-3 w-3 text-destructive" />;
+      case 'down': return <TrendingDown className="h-3 w-3 text-success" />;
+      case 'stable': return <div className="h-3 w-3 bg-muted-foreground rounded-full" />;
+      default: return null;
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'border-l-destructive bg-destructive/5';
+      case 'medium': return 'border-l-warning bg-warning/5';
+      case 'low': return 'border-l-success bg-success/5';
+      default: return 'border-l-muted';
     }
   };
 
@@ -123,7 +161,7 @@ export const PatientRecords = () => {
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(-1)}
-            className="hover:bg-accent"
+            className="hover:bg-accent transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
@@ -131,23 +169,78 @@ export const PatientRecords = () => {
           <h1 className="text-2xl font-bold">Patient Records</h1>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="hover:bg-accent transition-colors">
+            <Eye className="h-4 w-4 mr-2" />
+            View Timeline
+          </Button>
+          <Button variant="outline" size="sm" className="hover:bg-accent transition-colors">
             <Share className="h-4 w-4 mr-2" />
             Share Records
           </Button>
-          <Button size="sm" onClick={() => navigate('/new-patient')}>
+          <Button size="sm" onClick={() => navigate('/new-patient')} className="hover:scale-105 transition-transform">
             <Plus className="h-4 w-4 mr-2" />
             Add Patient
           </Button>
         </div>
       </div>
 
+      {/* Patient Status Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <Card className="border-l-4 border-l-success bg-success/5 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Health Status</p>
+                <p className="text-lg font-semibold text-success">Stable</p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-success" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-l-4 border-l-warning bg-warning/5 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Risk Level</p>
+                <p className="text-lg font-semibold text-warning">Moderate</p>
+              </div>
+              <AlertCircle className="h-8 w-8 text-warning" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-l-4 border-l-primary bg-primary/5 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Visits</p>
+                <p className="text-lg font-semibold">{medicalHistory.visits.length}</p>
+              </div>
+              <Stethoscope className="h-8 w-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-l-4 border-l-accent bg-accent/5 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Active Meds</p>
+                <p className="text-lg font-semibold">{medicalHistory.currentMedications.length}</p>
+              </div>
+              <Pill className="h-8 w-8 text-accent" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Patient Header */}
-      <Card>
+      <Card className="hover:shadow-lg transition-shadow">
         <CardContent className="p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-4">
-              <div className="bg-primary p-4 rounded-full">
+              <div className="bg-gradient-to-br from-primary to-primary/80 p-4 rounded-full shadow-lg">
                 <User className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
@@ -162,19 +255,20 @@ export const PatientRecords = () => {
                     <Heart className="h-4 w-4 mr-1" />
                     {patient.bloodType || 'O+'}
                   </span>
+                  <Badge variant="secondary" className="ml-2">Active Patient</Badge>
                 </div>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-accent transition-colors">
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Info
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hover:bg-accent transition-colors">
                 <Download className="h-4 w-4 mr-2" />
                 Export Records
               </Button>
-              <Button size="sm">
+              <Button size="sm" className="hover:scale-105 transition-transform">
                 <Plus className="h-4 w-4 mr-2" />
                 New Visit
               </Button>
@@ -281,24 +375,62 @@ export const PatientRecords = () => {
 
         <TabsContent value="visits" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle>Visit History</CardTitle>
-              <CardDescription>Patient's medical visit records</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Visit History</CardTitle>
+                <CardDescription>Patient's medical visit records</CardDescription>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filter
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {medicalHistory.visits.map((visit) => (
-                  <div key={visit.id} className="border rounded-lg p-4 space-y-3">
+                {medicalHistory.visits.map((visit, index) => (
+                  <div key={visit.id} className={`border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow ${
+                    visit.type === 'Emergency Visit' ? 'border-l-4 border-l-destructive bg-destructive/5' :
+                    visit.type === 'Specialist Consultation' ? 'border-l-4 border-l-warning bg-warning/5' :
+                    'border-l-4 border-l-success bg-success/5'
+                  }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="bg-primary/10 p-2 rounded-full">
-                          <Stethoscope className="h-4 w-4 text-primary" />
+                        <div className={`p-2 rounded-full ${
+                          visit.type === 'Emergency Visit' ? 'bg-destructive/10' :
+                          visit.type === 'Specialist Consultation' ? 'bg-warning/10' :
+                          'bg-success/10'
+                        }`}>
+                          <Stethoscope className={`h-4 w-4 ${
+                            visit.type === 'Emergency Visit' ? 'text-destructive' :
+                            visit.type === 'Specialist Consultation' ? 'text-warning' :
+                            'text-success'
+                          }`} />
                         </div>
                         <div>
-                          <h4 className="font-medium">{visit.type}</h4>
+                          <div className="flex items-center space-x-2">
+                            <h4 className="font-medium">{visit.type}</h4>
+                            <Badge variant={
+                              visit.type === 'Emergency Visit' ? 'destructive' :
+                              visit.type === 'Specialist Consultation' ? 'secondary' :
+                              'default'
+                            } className="text-xs">
+                              {visit.type === 'Emergency Visit' ? 'Urgent' :
+                               visit.type === 'Specialist Consultation' ? 'Specialist' :
+                               'Routine'}
+                            </Badge>
+                          </div>
                           <p className="text-sm text-muted-foreground">{visit.date} • {visit.doctor}</p>
                         </div>
                       </div>
+                      <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </div>
                     <div>
                       <p className="font-medium mb-1">Diagnosis:</p>
@@ -313,7 +445,7 @@ export const PatientRecords = () => {
                         <p className="font-medium mb-1">Prescriptions:</p>
                         <div className="flex flex-wrap gap-1">
                           {visit.prescriptions.map((prescription, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <Badge key={index} variant="outline" className="text-xs hover:bg-accent transition-colors cursor-pointer">
                               {prescription}
                             </Badge>
                           ))}
@@ -329,21 +461,30 @@ export const PatientRecords = () => {
 
         <TabsContent value="medications" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle>Current Medications</CardTitle>
-              <CardDescription>Active prescriptions and dosages</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Current Medications</CardTitle>
+                <CardDescription>Active prescriptions and dosages</CardDescription>
+              </div>
+              <Button variant="outline" size="sm" className="hover:bg-accent transition-colors">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Medication
+              </Button>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {medicalHistory.currentMedications.map((medication, index) => (
-                  <div key={index} className="border rounded-lg p-4">
+                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow border-l-4 border-l-success bg-success/5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className="bg-success/10 p-2 rounded-full">
                           <Pill className="h-4 w-4 text-success" />
                         </div>
                         <div>
-                          <h4 className="font-medium">{medication.name}</h4>
+                          <div className="flex items-center space-x-2">
+                            <h4 className="font-medium">{medication.name}</h4>
+                            <Badge variant="default" className="text-xs">Active</Badge>
+                          </div>
                           <p className="text-sm text-muted-foreground">
                             {medication.dosage} • {medication.frequency}
                           </p>
@@ -352,7 +493,15 @@ export const PatientRecords = () => {
                           </p>
                         </div>
                       </div>
-                      <Badge variant="default">Active</Badge>
+                      <div className="flex items-center space-x-2">
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-success">On Schedule</p>
+                          <p className="text-xs text-muted-foreground">Next: Tomorrow 8:00 AM</p>
+                        </div>
+                        <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -402,25 +551,51 @@ export const PatientRecords = () => {
 
         <TabsContent value="labs" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle>Laboratory Results</CardTitle>
-              <CardDescription>Recent lab tests and values</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Laboratory Results</CardTitle>
+                <CardDescription>Recent lab tests and values</CardDescription>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filter by Status
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Order Tests
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {medicalHistory.labResults.map((result, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{result.test}</h4>
-                      <p className="text-sm text-muted-foreground">{result.date}</p>
+                  <div key={index} className={`flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow border-l-4 ${getPriorityColor(result.priority)}`}>
+                    <div className="flex items-center space-x-3">
+                      {getStatusIcon(result.status)}
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h4 className="font-medium">{result.test}</h4>
+                          <Badge variant={getStatusBadge(result.status)} className="text-xs">
+                            {result.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{result.date}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className={`font-bold ${getStatusColor(result.status)}`}>
-                        {result.value}
-                      </p>
-                      <Badge variant={getStatusBadge(result.status)} className="text-xs">
-                        {result.status}
-                      </Badge>
+                    <div className="flex items-center space-x-3">
+                      <div className="text-right">
+                        <div className="flex items-center space-x-2">
+                          <p className={`font-bold ${getStatusColor(result.status)}`}>
+                            {result.value}
+                          </p>
+                          {getTrendIcon(result.trend)}
+                        </div>
+                        <p className="text-xs text-muted-foreground capitalize">{result.priority} Priority</p>
+                      </div>
+                      <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100">
+                        <Eye className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 ))}
